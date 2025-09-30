@@ -3,22 +3,29 @@
 import {Request , Response} from "express";
 import   UrlShorten from '../model/schema.js'
 import {StatusCodes} from 'http-status-codes'
-
+import {isValidUrl} from '../utils/urlValidator.js'
+import {isVlidateLongUrl} from '../utils/inputValidator.js'
+import {handleError} from '../utils/errorHandler.js'
 
 
 // post request-responed for shortenUrl
 const shortenUrl = async(req:Request , res:Response):Promise<void>=>{
     const {longUrl} = req.body;
 
-    if(!longUrl){
-        res.status(StatusCodes.BAD_REQUEST).json({msg:"longUrl is required"});
+    if(!isVlidateLongUrl(longUrl)){
+        res.status(StatusCodes.BAD_REQUEST).json({msg:"url is required"});
+        return;
+    }
+     
+    if(!isValidUrl(longUrl)){
+      res.status(StatusCodes.BAD_REQUEST).json({msg:"inValid url"});
         return;
     }
 
     try {
        const url = await UrlShorten.findOne({longUrl});
        if(url){
-        res.status(StatusCodes.BAD_REQUEST).json({msg: "longUrl already exist"});
+        res.status(StatusCodes.BAD_REQUEST).json({msg: "url already exist"});
         return;
        }
 
@@ -26,12 +33,7 @@ const shortenUrl = async(req:Request , res:Response):Promise<void>=>{
        await newUrl.save();
        res.status(StatusCodes.CREATED).json({msg:'Success! Here is your short URL:', shortenUrl:newUrl.shortenUrl})
     } catch (error:unknown) {
-        console.error(error)
-     if(error instanceof Error){
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg: "something went wrong", error:error.message})
-     }else{
-       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg: "something went wrong", error:"An unknown error occurred"})
-     }  
+       handleError(res , error) 
     }
 };
 
@@ -47,18 +49,13 @@ const getOriginalUrl = async(req:Request , res:Response):Promise<void>=>{
     try {
         const getUrl = await UrlShorten.findOne({shortenUrl:shortUrl});
         if(!getUrl){
-        res.status(StatusCodes.BAD_REQUEST).json({msg:"please enter valid shortUrl"});
+        res.status(StatusCodes.NOT_FOUND).json({msg:"Not-Found"});
         return; 
         }
      res.status(StatusCodes.OK).json({msg: "Here is your longUrl" , longUrl:getUrl.longUrl})
 
     } catch (error:unknown) {
-     console.error(error)
-     if(error instanceof Error){
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg: "something went wrong", error:error.message})
-     }else{
-       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg: "something went wrong", error:"An unknown error occurred"})
-     }  
+      handleError(res , error);
     }
     
 }
@@ -78,13 +75,7 @@ const listUrls = async(req:Request , res:Response):Promise<void>=>{
      res.status(StatusCodes.OK).json({msg: "Here is all list of urls", data:formattedUrls})
         
     } catch (error:unknown) {
-    console.error(error)
-     if(error instanceof Error){
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg: "something went wrong", error:error.message})
-     }else{
-       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg: "something went wrong", error:"An unknown error occurred"})
-     }  
-        
+      handleError(res , error)
     }
 }
 
