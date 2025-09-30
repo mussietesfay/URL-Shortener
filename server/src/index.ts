@@ -1,16 +1,29 @@
 
-import express , {Request , Response} from 'express';
+import express from 'express';
+import dbConfig from './db/dbConfig.js';
 
 const app = express();
-
-const port = 5050;
-
-
-app.get('/', (req:Request , res:Response)=>{
-    res.send(`this is for test`)
-});
+const port:number = Number(process.env.SERVER_PORT);
+app.use(express.json());
 
 
-app.listen(port , ()=>{
-    console.log(`server ruuning on port: ${port}`)
-})
+
+const start = async():Promise<void> =>{
+    try {
+     await dbConfig();
+     console.log(`database connected successfully`);
+
+     app.listen(port , ()=>{
+        console.log(`server ruuning on port: ${port}`)
+        });
+    } catch (error) {
+       console.error(error);
+       throw new Error(`something went wrong: ${error}`)
+    }
+}
+
+start();
+
+
+
+
