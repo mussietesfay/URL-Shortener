@@ -1,0 +1,67 @@
+version: "3.9"
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: server
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+    environment:
+      - SERVER_PORT=${SERVER_PORT}
+      - CHOKIDAR_USEPOLLING=${CHOKIDAR_USEPOLLING}
+      - NODE_OPTIONS=${NODE_OPTIONS}
+    
+    volumes:
+      - ./server/src:/app/src
+      - ./server/package.json:/app/package.json
+      - ./server/nodemon.json:/app/nodemon.json
+      - ./server/tsconfig.json:/app/tsconfig.json
+      - /app/node_modules
+    
+    networks:
+      - url-shortener 
+    depends_on:
+       mongo:
+         condition: service_healthy
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo  
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+    
+    volumes:
+      - mongo_data:/data/db
+
+    networks:
+      - url-shortener 
+    healthcheck:
+      test: ["CMD","mongosh", "--eval", "db.adminCommand({ping: 1})"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
+
+  mongoman:
+    image: ghcr.io/aientech/mongoman:main
+    container_name: mongoman
+    restart: always
+    ports:
+      - "8080:3000"
+    environment:
+      - MONGODB_URI=${MONGODB_URI}
+    networks:
+      - url-shortener
+    depends_on:
+       mongo:
+         condition: service_healthy
+        
+networks:
+  url-shortener:
+    driver: bridge 
+
+volumes:
+  mongo_data:  
