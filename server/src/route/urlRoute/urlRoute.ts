@@ -3,7 +3,7 @@ import express from 'express';
 
 const router = express.Router();
 
-import {shortenUrl , getOriginalUrl , listUrls} from '../controllers/urlController.js'
+import {shortenUrl , getOriginalUrl , listUrls} from '../../controllers/urlController/urlController.js'
 
 
 router.post('/v1/shorten', shortenUrl);

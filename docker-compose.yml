@@ -10,6 +10,7 @@ services:
     environment:
       - SERVER_PORT=${SERVER_PORT}
       - MONGODB_URI=${MONGODB_URI}
+      - SECRET_KEY=${SECRET_KEY}
       - CHOKIDAR_USEPOLLING=${CHOKIDAR_USEPOLLING}
       - NODE_OPTIONS=${NODE_OPTIONS}
     

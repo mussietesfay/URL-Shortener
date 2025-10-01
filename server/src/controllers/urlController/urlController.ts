@@ -1,18 +1,24 @@
 
 
 import {Request , Response} from "express";
-import   UrlShorten from '../model/schema.js'
+import   UrlShorten from '../../model/urlSchema.js'
 import {StatusCodes} from 'http-status-codes'
-import {isValidUrl} from '../utils/urlValidator.js'
-import {isVlidateLongUrl} from '../utils/inputValidator.js'
-import {handleError} from '../utils/errorHandler.js'
+import {isValidUrl} from '../../utils/urlValidator.js'
+import {isValidateLongUrl} from '../../utils/inputValidator.js'
+import {handleError} from '../../utils/errorHandler.js'
+
 
 
 // post request-responed for shortenUrl
 const shortenUrl = async(req:Request , res:Response):Promise<void>=>{
-    const {longUrl} = req.body;
+  console.log(req.user)
+  const {user , id} = req.user || {};
+  const {longUrl} = req.body;
+    
+    
+   
 
-    if(!isVlidateLongUrl(longUrl)){
+    if(!isValidateLongUrl(longUrl)){
         res.status(StatusCodes.BAD_REQUEST).json({msg:"url is required"});
         return;
     }
@@ -25,13 +31,24 @@ const shortenUrl = async(req:Request , res:Response):Promise<void>=>{
     try {
        const url = await UrlShorten.findOne({longUrl});
        if(url){
-        res.status(StatusCodes.BAD_REQUEST).json({msg: "url already exist"});
+        res.status(StatusCodes.BAD_REQUEST).json({
+          msg: "url already exist",
+          shortenUrl: url.shortenUrl,
+          username: url.username
+        });
         return;
        }
 
-       const newUrl = new UrlShorten({longUrl});
+       const newUrl = new UrlShorten({
+        longUrl,
+        userId:id, 
+        username:user
+      });
        await newUrl.save();
-       res.status(StatusCodes.CREATED).json({msg:'Success! Here is your short URL:', shortenUrl:newUrl.shortenUrl})
+       res.status(StatusCodes.CREATED).json({msg:'Success! Here is your short URL:', 
+        shortenUrl:newUrl.shortenUrl,
+        username: newUrl.username
+      })
     } catch (error:unknown) {
        handleError(res , error) 
     }
@@ -69,7 +86,8 @@ const listUrls = async(req:Request , res:Response):Promise<void>=>{
      const allUrls = await UrlShorten.find({});
      const formattedUrls = allUrls.map(url =>({
         longUrl: url.longUrl,
-        shortenUrl: url.shortenUrl
+        shortenUrl: url.shortenUrl,
+        username: url.username
      }));
      
      res.status(StatusCodes.OK).json({msg: "Here is all list of urls", data:formattedUrls})

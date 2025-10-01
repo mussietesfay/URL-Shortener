@@ -1,13 +1,20 @@
 
 import express from 'express';
 import dbConfig from './db/dbConfig.js';
-import urlRoutes from './route/urlRoute.js';
+import urlRoute from './route/urlRoute/urlRoute.js';
+import userRoute from './route/userRoute/userRoute.js';
+import {authMiddle} from './middleware/userMiddleware.js'
+import {rateLimiter} from './utils/rateLimit.js'
+
 
 const app = express();
 const port:number = Number(process.env.SERVER_PORT);
 app.use(express.json());
 
-app.use(urlRoutes)
+
+app.use(rateLimiter)
+app.use(userRoute)
+app.use(authMiddle,urlRoute)
 
 const start = async():Promise<void> =>{
     try {
