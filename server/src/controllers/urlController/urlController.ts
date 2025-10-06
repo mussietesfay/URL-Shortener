@@ -11,7 +11,6 @@ import {handleError} from '../../utils/errorHandler.js'
 
 // post request-responed for shortenUrl
 const shortenUrl = async(req:Request , res:Response):Promise<void>=>{
-  console.log(req.user)
   const {user , id} = req.user || {};
   const {longUrl} = req.body;
     
@@ -45,7 +44,8 @@ const shortenUrl = async(req:Request , res:Response):Promise<void>=>{
         username:user
       });
        await newUrl.save();
-       res.status(StatusCodes.CREATED).json({msg:'Success! Here is your short URL:', 
+       res.status(StatusCodes.CREATED).json({
+        msg:'Success! Here is your short URL:', 
         shortenUrl:newUrl.shortenUrl,
         username: newUrl.username
       })
@@ -69,7 +69,10 @@ const getOriginalUrl = async(req:Request , res:Response):Promise<void>=>{
         res.status(StatusCodes.NOT_FOUND).json({msg:"Not-Found"});
         return; 
         }
-     res.status(StatusCodes.OK).json({msg: "Here is your longUrl" , longUrl:getUrl.longUrl})
+     res.status(StatusCodes.OK).json({
+      msg: "Here is your longUrl" , 
+      longUrl:getUrl.longUrl
+    })
 
     } catch (error:unknown) {
       handleError(res , error);
@@ -90,7 +93,10 @@ const listUrls = async(req:Request , res:Response):Promise<void>=>{
         username: url.username
      }));
      
-     res.status(StatusCodes.OK).json({msg: "Here is all list of urls", data:formattedUrls})
+     res.status(StatusCodes.OK).json({
+      msg: "Here is all list of urls", 
+      data:formattedUrls
+    });
         
     } catch (error:unknown) {
       handleError(res , error)

@@ -50,7 +50,13 @@ const register = async(req:Request , res:Response):Promise<void>=>{
         password:hashPassword
     });
     await newUser.save();
-    res.status(StatusCodes.CREATED).json({msg: "User registered successfully." , username:newUser.username , email:newUser.email});
+    res.status(StatusCodes.CREATED).json({
+        msg: "User registered successfully.",
+        user:{
+            username:newUser.username ,
+            email:newUser.email
+           } 
+      });
     return;
 
     } catch (error) {
@@ -108,8 +114,10 @@ const checkUser = async (req:Request , res:Response):Promise<void> =>{
 
      res.status(StatusCodes.OK).json({
         msg:"this is from checkUser",
-        user:user,
-        id:id
+        user:{
+            user:user,
+            id:id
+        }
     })
 }
 

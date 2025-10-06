@@ -1,0 +1,112 @@
+.url-shortener {
+    max-width: 400px; 
+    margin: 50px auto; 
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff; 
+    font-family: Arial, sans-serif; 
+    position: relative; 
+}
+
+.url-shortener h1 {
+    text-align: center;
+    color: #333; 
+}
+
+.url-shortener p {
+    text-align: center;
+    margin: 10px 0; 
+}
+
+.url-shortener form {
+    display: flex;
+    flex-direction: column;
+}
+
+.url-shortener input[type="url"] {
+    padding: 10px;
+    margin: 10px 0; 
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px; 
+}
+
+.url-shortener button {
+    padding: 10px;
+    background-color: #007bff; 
+    color: white; 
+    border: none;
+    border-radius: 4px;
+    cursor: pointer; 
+    font-size: 16px; 
+}
+
+.url-shortener button:hover {
+    background-color: #0056b3; 
+}
+
+.url-shortener .result {
+    margin-top: 20px; 
+    text-align: center; 
+}
+
+.url-shortener .shortened-url {
+    font-weight: bold; 
+    margin: 10px 0; 
+}
+
+.url-shortener .copy-button {
+    padding: 5px 10px;
+    background-color: #28a745; 
+    color: white; 
+    border: none;
+    border-radius: 4px;
+    cursor: pointer; 
+}
+
+.url-shortener .copy-button:hover {
+    background-color: #218838; 
+}
+
+.url-shortener p.error {
+    color: red; 
+    text-align: center; 
+}
+
+.view-urls-button {
+    margin-top: 20px;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.view-urls-button:hover {
+    background-color: #0056b3;
+}
+
+
+.logout-button {
+    padding: 8px 12px; 
+    background-color: #007bff; 
+    color: white;
+    border: none;
+    border-radius: 4px; 
+    cursor: pointer;
+    font-size: 14px; 
+    transition: background-color 0.3s ease; 
+    margin-top: 10px; 
+}
+
+.logout-button:hover {
+    background-color: #0056b3; 
+}
+
+.logout-button:focus {
+    outline: none; 
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); 
+}

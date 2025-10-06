@@ -1,16 +1,17 @@
-import { useState, type FormEvent } from 'react';
+import { useContext, useState, type FormEvent } from 'react';
 import './Login.css' 
 import axiosInstance from '../../axiosConfig'
 import axios from 'axios'; 
 import { useNavigate, Link } from 'react-router-dom';
-
+import {AppState} from '../../context/AppContext'
 const Login = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const appState = useContext(AppState)
   const navigate = useNavigate();
-
+  
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     
@@ -25,10 +26,17 @@ const Login = () => {
     try {
       const response = await axiosInstance.post('/login', { email, password }); 
       setSuccessMessage(response?.data?.msg);
-      localStorage.setItem('token', response?.data?.token)
+      if(appState){
+         appState.setUser(response?.data?.user?.username)
+       }
+       console.log(response?.data?.user?.username)
+        
+      localStorage.setItem('token', response?.data?.user?.token);
+    
+
       
       setTimeout(() => {
-        navigate('/'); 
+        navigate('/shorten'); 
       }, 2000); 
     } catch (error: any) {
       if (axios.isAxiosError(error) && error.response) {
