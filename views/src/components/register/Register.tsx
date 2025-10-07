@@ -60,6 +60,7 @@ const Register = () => {
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Enter your username"
             required
+            autoComplete="username"
           />
         </div>
         <div className="form-group">
@@ -69,8 +70,9 @@ const Register = () => {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
+            placeholder="Enter your email (e.g. example@gmail.com)"
             required
+            autoComplete="username"
           />
         </div>
         <div className="form-group">
@@ -82,6 +84,7 @@ const Register = () => {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password"
             required
+            autoComplete="current-password"
           />
         </div>
         <button type="submit">Register</button>

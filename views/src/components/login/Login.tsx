@@ -4,6 +4,8 @@ import axiosInstance from '../../axiosConfig'
 import axios from 'axios'; 
 import { useNavigate, Link } from 'react-router-dom';
 import {AppState} from '../../context/AppContext'
+
+
 const Login = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -23,27 +25,34 @@ const Login = () => {
       return;
     }
 
+    let isMounted = true;
+
     try {
       const response = await axiosInstance.post('/login', { email, password }); 
+
+      if(isMounted){
       setSuccessMessage(response?.data?.msg);
       if(appState){
          appState.setUser(response?.data?.user?.username)
        }
-       console.log(response?.data?.user?.username)
-        
+       
       localStorage.setItem('token', response?.data?.user?.token);
-    
-
       
       setTimeout(() => {
-        navigate('/shorten'); 
+          navigate('/shorten');
       }, 2000); 
+    }
     } catch (error: any) {
+
+        if(isMounted){
       if (axios.isAxiosError(error) && error.response) {
         setErrorMessage(error.response.data.msg || "Login failed.");
       } else {
         setErrorMessage("An unknown error occurred.");
       }
+    }
+    }finally {
+        isMounted = false;
     }
   };
 
@@ -62,6 +71,7 @@ const Login = () => {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
             required
+            autoComplete="username"
           />
         </div>
         <div className="form-group">
@@ -73,6 +83,7 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password"
             required
+            autoComplete="current-password"
           />
         </div>
         <button type="submit">Login</button>

@@ -5,11 +5,10 @@ import Register from "./components/register/Register";
 import Login from "./components/login/Login";
 import UrlShortener from "./components/urlShortener/UrlShortener";
 import UrlList from "./components/urlList/UrlList";
-import {Routes , Route, useNavigate, Navigate} from 'react-router-dom'
+import {Routes , Route, useNavigate, Navigate} from 'react-router-dom';
 import {useEffect, useState } from "react";
-import axiosInstance from './axiosConfig'
-import {AppState} from './context/AppContext'
-// import type {User } from './types/userTypes'
+import axiosInstance from './axiosConfig';
+import {AppState} from './context/AppContext';
 
 
 const App = () => {

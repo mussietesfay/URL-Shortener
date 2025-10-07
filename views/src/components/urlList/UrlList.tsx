@@ -21,6 +21,7 @@ const UrlList = () => {
 
     useEffect(() => {
         const fetchUrls = async () => {
+
             const token = localStorage.getItem('token');
             if (!token) return;
 
@@ -30,7 +31,7 @@ const UrlList = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                console.log(response?.data?.data);
+               
                 setUrls(response?.data?.data || []); 
             } catch (error) {
                 if (axios.isAxiosError(error) && error.response) {
@@ -67,8 +68,8 @@ const UrlList = () => {
                 <p>No shortened URLs found. Please add some URLs.</p> 
             ) : (
                 <ul>
-                    {urls.map((url, index) => (
-                        <li key={index}>
+                    {urls.slice().reverse().map((url) => (
+                        <li key={url._id}>
                             <div>
                                 <strong>Long URL:</strong> {url.longUrl}
                             </div>
